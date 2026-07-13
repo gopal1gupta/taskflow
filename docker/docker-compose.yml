@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:17
+
+    container_name: taskflow-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: taskflow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+
+    container_name: taskflow-backend
+
+    restart: unless-stopped
+
+    depends_on:
+      - postgres
+
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: taskflow
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/taskflow
+      COGNITO_REGION: ap-south-1
+      COGNITO_USER_POOL_ID: 
+      COGNITO_CLIENT_ID: 
+
+    ports:
+      - "5000:5000"
+
+  pgadmin:
+    image: dpage/pgadmin4
+
+    container_name: taskflow-pgadmin
+
+    restart: unless-stopped
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@taskflow.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
