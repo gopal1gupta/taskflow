@@ -1,20 +1,25 @@
 version: 1
 
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - npm ci
+applications:
+  - appRoot: frontend
 
-    build:
-      commands:
-        - npm run build
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - echo "Installing frontend dependencies..."
+            - npm ci
 
-  artifacts:
-    baseDirectory: dist
-    files:
-      - '**/*'
+        build:
+          commands:
+            - echo "Building frontend..."
+            - npm run build
 
-  cache:
-    paths:
-      - node_modules/**/*
+      artifacts:
+        baseDirectory: dist
+        files:
+          - "**/*"
+
+      cache:
+        paths:
+          - node_modules/**/*
