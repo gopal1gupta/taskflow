@@ -11,7 +11,7 @@ const envSchema = z.object({
     "production",
     "test",
   ]),
-
+  REDIS_URL: z.string(),
   DB_HOST: z.string(),
 
   DB_PORT: z.coerce.number(),
